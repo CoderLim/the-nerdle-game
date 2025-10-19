@@ -12,7 +12,7 @@ export default function Header({ onHelpClick, onStatsClick }: HeaderProps) {
         <button
           onClick={onHelpClick}
           className="text-gray-400 hover:text-white transition-colors"
-          aria-label="帮助"
+          aria-label="Help"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@ export default function Header({ onHelpClick, onStatsClick }: HeaderProps) {
         <button
           onClick={onStatsClick}
           className="text-gray-400 hover:text-white transition-colors"
-          aria-label="统计"
+          aria-label="Statistics"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

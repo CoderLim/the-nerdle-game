@@ -1,4 +1,4 @@
-// 统计数据模态框
+// Statistics modal
 
 'use client';
 
@@ -28,20 +28,20 @@ export default function StatsModal({
   const maxGuessCount = Math.max(...stats.guessDistribution);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="统计数据">
+    <Modal isOpen={isOpen} onClose={onClose} title="Statistics">
       <div className="text-gray-300 space-y-4 sm:space-y-6 text-sm sm:text-base">
-        {/* 游戏结果 */}
+        {/* Game Result */}
         {gameStatus !== 'playing' && (
           <div className="text-center p-4 bg-gray-800 rounded-lg">
             {gameStatus === 'won' ? (
               <>
-                <p className="text-2xl font-bold text-green-400 mb-2">🎉 恭喜获胜！</p>
-                <p className="text-sm">你猜对了今天的等式</p>
+                <p className="text-2xl font-bold text-green-400 mb-2">🎉 Congratulations!</p>
+                <p className="text-sm">You guessed today&apos;s equation</p>
               </>
             ) : (
               <>
-                <p className="text-2xl font-bold text-red-400 mb-2">😔 很遗憾</p>
-                <p className="text-sm mb-2">正确答案是：</p>
+                <p className="text-2xl font-bold text-red-400 mb-2">😔 Better Luck Next Time</p>
+                <p className="text-sm mb-2">The correct answer was:</p>
                 <p className="text-xl font-bold text-white bg-gray-900 px-4 py-2 rounded inline-block">
                   {answer}
                 </p>
@@ -50,29 +50,29 @@ export default function StatsModal({
           </div>
         )}
 
-        {/* 统计数据 */}
+        {/* Statistics */}
         <div className="grid grid-cols-4 gap-4 text-center">
           <div>
             <div className="text-3xl font-bold text-white">{stats.gamesPlayed}</div>
-            <div className="text-xs text-gray-400">已玩次数</div>
+            <div className="text-xs text-gray-400">Played</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-white">{winRate}%</div>
-            <div className="text-xs text-gray-400">胜率</div>
+            <div className="text-xs text-gray-400">Win Rate</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-white">{stats.currentStreak}</div>
-            <div className="text-xs text-gray-400">当前连胜</div>
+            <div className="text-xs text-gray-400">Current Streak</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-white">{stats.maxStreak}</div>
-            <div className="text-xs text-gray-400">最高连胜</div>
+            <div className="text-xs text-gray-400">Max Streak</div>
           </div>
         </div>
 
-        {/* 猜测分布 */}
+        {/* Guess Distribution */}
         <div>
-          <h3 className="text-sm font-bold text-white mb-3">猜测分布</h3>
+          <h3 className="text-sm font-bold text-white mb-3">Guess Distribution</h3>
           <div className="space-y-1">
             {stats.guessDistribution.map((count, index) => {
               const percentage = maxGuessCount > 0 
@@ -96,29 +96,29 @@ export default function StatsModal({
           </div>
         </div>
 
-        {/* 下一局倒计时 */}
+        {/* Next Game Countdown */}
         {gameStatus !== 'playing' && (
           <div className="text-center p-4 bg-gray-800 rounded-lg">
-            <p className="text-sm text-gray-400 mb-1">下一个 Nerdle</p>
+            <p className="text-sm text-gray-400 mb-1">Next Nerdle</p>
             <p className="text-2xl font-bold text-white">
               <NextGameCountdown />
             </p>
           </div>
         )}
 
-        {/* 关闭按钮 */}
+        {/* Close button */}
         <button
           onClick={onClose}
           className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded transition-colors"
         >
-          关闭
+          Close
         </button>
       </div>
     </Modal>
   );
 }
 
-// 倒计时组件
+// Countdown component
 function NextGameCountdown() {
   const getTimeUntilMidnight = () => {
     const now = new Date();

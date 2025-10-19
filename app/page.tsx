@@ -79,22 +79,22 @@ export default function Home() {
           />
         </div>
 
-        {/* 错误消息 */}
+        {/* Error message */}
         {errorMessage && (
           <div className="mb-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
             {errorMessage}
           </div>
         )}
 
-        {/* 游戏状态消息 */}
+        {/* Game status message */}
         {gameStatus === 'won' && (
           <div className="mb-4 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
-            🎉 恭喜你猜对了！
+            🎉 Congratulations! You got it!
           </div>
         )}
         {gameStatus === 'lost' && (
           <div className="mb-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
-            😔 很遗憾，正确答案是：{answer}
+            😔 Better luck next time! The answer was: {answer}
           </div>
         )}
 
@@ -121,10 +121,10 @@ export default function Home() {
         answer={answer}
       />
 
-      {/* 页脚 */}
+      {/* Footer */}
       <footer className="text-center py-4 text-gray-500 text-sm border-t border-gray-800">
-        <p>Nerdle 数学等式猜谜游戏 © 2025</p>
-        <p className="mt-1">每日挑战，锻炼你的数学思维</p>
+        <p>Nerdle - Math Equation Puzzle Game © 2025</p>
+        <p className="mt-1">Daily challenge to exercise your mathematical thinking</p>
       </footer>
     </div>
   );

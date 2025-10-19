@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nerdle - 数学等式猜谜游戏",
-  description: "每日数学等式挑战，在6次尝试内猜出正确的8字符数学等式。锻炼你的数学思维！",
+  title: "Nerdle - Math Equation Puzzle Game",
+  description: "Daily math equation challenge. Guess the correct 8-character equation in 6 tries. Exercise your mathematical thinking!",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
