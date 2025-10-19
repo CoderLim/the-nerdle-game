@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nerdle - 数学等式猜谜游戏
 
-## Getting Started
+一个基于 Next.js 的数学等式猜谜游戏，灵感来自 Wordle。每天挑战一个新的 8 字符数学等式！
 
-First, run the development server:
+## 🎯 游戏目标
+
+在 6 次尝试内猜出正确的数学等式。每次猜测后，方格的颜色会变化，显示猜测与正确答案的匹配程度。
+
+## 🎮 游戏规则
+
+- 每个等式由 **8 个字符** 组成，包括数字和运算符
+- 必须包含一个等号（`=`）
+- 等号右侧必须是一个数字（非另一个等式）
+- 运算符包括：`+`、`-`、`*`、`/`
+- 遵循标准的运算顺序：先乘除，后加减
+- 等式必须是数学上正确的
+- 不允许前导零或负数
+
+## 🎨 提示颜色说明
+
+- **绿色（Green）**：该字符在正确的位置
+- **紫色（Purple）**：该字符在等式中，但位置错误
+- **灰色（Gray）**：该字符不在等式中
+
+## 🚀 技术栈
+
+- **Next.js 15** - React 框架
+- **TypeScript** - 类型安全
+- **Tailwind CSS** - 样式设计
+- **localStorage** - 游戏进度和统计数据持久化
+
+## 📦 安装和运行
 
 ```bash
+# 安装依赖
+npm install
+
+# 开发模式运行
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 构建生产版本
+npm run build
+
+# 运行生产版本
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开浏览器访问 [http://localhost:3000](http://localhost:3000) 开始游戏！
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎯 功能特性
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- ✅ 每日挑战模式（基于日期生成唯一答案）
+- ✅ 游戏进度自动保存
+- ✅ 统计数据追踪（游戏次数、胜率、连胜等）
+- ✅ 完整的等式验证（格式、数学正确性）
+- ✅ 响应式设计（支持移动端和桌面端）
+- ✅ 虚拟键盘和物理键盘支持
+- ✅ 优雅的动画效果（翻转、震动、淡入）
+- ✅ 帮助说明和游戏规则
+- ✅ 游戏统计和历史记录
 
-## Learn More
+## 📁 项目结构
 
-To learn more about Next.js, take a look at the following resources:
+```
+the-nerdle-game/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx         # 根布局
+│   ├── page.tsx           # 主页面
+│   └── globals.css        # 全局样式
+├── components/             # React 组件
+│   ├── GameBoard.tsx      # 游戏面板
+│   ├── Tile.tsx           # 单个字符方格
+│   ├── Keyboard.tsx       # 虚拟键盘
+│   ├── Modal.tsx          # 通用模态框
+│   ├── HelpModal.tsx      # 帮助模态框
+│   ├── StatsModal.tsx     # 统计模态框
+│   └── Header.tsx         # 顶部导航
+├── hooks/                  # React Hooks
+│   └── useGameState.ts    # 游戏状态管理
+├── lib/                    # 工具函数
+│   ├── game-logic.ts      # 游戏核心逻辑
+│   └── storage.ts         # 数据持久化
+└── public/                 # 静态资源
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧪 等式示例
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+有效的等式：
+- `12+34=46`
+- `8*9-2=70`
+- `56/8=7`
+- `7*8+4=60`
 
-## Deploy on Vercel
+无效的等式：
+- `12+3=15` （只有 7 个字符）
+- `01+2=3` （前导零）
+- `5-10=-5` （负数）
+- `10+20=31` （数学错误）
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎓 开发笔记
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 等式生成
+- 使用预定义的等式池确保质量
+- 基于日期哈希选择每日等式
+- 所有用户同一天看到相同的等式
+
+### 状态管理
+- 使用 React Hooks 管理游戏状态
+- localStorage 自动保存和恢复进度
+- 支持跨会话游戏继续
+
+### 验证逻辑
+- 完整的等式格式验证
+- 遵循运算优先级的表达式计算
+- 防止无效输入和作弊
+
+## 📝 许可证
+
+MIT License
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+---
+
+享受游戏，锻炼你的数学思维！🧠✨
