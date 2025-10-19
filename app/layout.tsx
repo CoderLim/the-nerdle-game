@@ -14,8 +14,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nerdle - Math Equation Puzzle Game",
-  description: "Daily math equation challenge. Guess the correct 8-character equation in 6 tries. Exercise your mathematical thinking!",
+  title: "Play Nerdle Game Online - Solve Mathematical Puzzles",
+  description: "Play Nerdle, a math-based puzzle game that challenges your numerical logic. Solve puzzles, improve your skills, and enjoy hours of fun!",
+  metadataBase: new URL('https://thenerdlegame.com'),
+  alternates: {
+    canonical: 'https://thenerdlegame.com',
+  },
+  openGraph: {
+    title: "Play Nerdle Game Online - Solve Mathematical Puzzles",
+    description: "Play Nerdle, a math-based puzzle game that challenges your numerical logic. Solve puzzles, improve your skills, and enjoy hours of fun!",
+    url: 'https://thenerdlegame.com',
+    siteName: 'Nerdle Game',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Play Nerdle Game Online - Solve Mathematical Puzzles",
+    description: "Play Nerdle, a math-based puzzle game that challenges your numerical logic. Solve puzzles, improve your skills, and enjoy hours of fun!",
+  },
 };
 
 export default function RootLayout({
