@@ -6,6 +6,7 @@ import GameBoard from '@/components/GameBoard';
 import Keyboard from '@/components/Keyboard';
 import HelpModal from '@/components/HelpModal';
 import StatsModal from '@/components/StatsModal';
+import Footer from '@/components/Footer';
 import { useGameState } from '@/hooks/useGameState';
 
 export default function Home() {
@@ -284,10 +285,7 @@ export default function Home() {
       />
 
       {/* Footer */}
-      <footer className="text-center py-4 text-gray-500 text-sm border-t border-gray-800">
-        <p>Nerdle - Math Equation Puzzle Game © 2025</p>
-        <p className="mt-1">Daily challenge to exercise your mathematical thinking</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
