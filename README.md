@@ -207,7 +207,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🙏 Acknowledgments
 
-- Inspired by the original [Nerdle](https://nerdlegame.com/) game
+- Inspired by the original [Nerdle](https://thenerdlegame.com/) game
 - Built with modern web technologies
 - Community feedback and contributions
 
