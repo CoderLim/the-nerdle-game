@@ -20,10 +20,45 @@ const OPERATORS = '+-*/';
 const NUMBERS = '0123456789';
 
 /**
- * 生成每日答案
+ * 从API获取每日答案
+ */
+export async function getDailyAnswerFromAPI(): Promise<string | null> {
+  try {
+    const response = await fetch('https://get-nerdle-topic.gengliming110.workers.dev/', {
+      method: 'GET',
+      cache: 'no-store', // 确保每次都获取最新数据
+    });
+    
+    if (!response.ok) {
+      console.error('API请求失败:', response.status);
+      return null;
+    }
+    
+    const topic = await response.text();
+    
+    // 验证返回的题目是否有效
+    const trimmedTopic = topic.trim();
+    if (trimmedTopic && trimmedTopic.length === 8) {
+      const validation = isValidEquation(trimmedTopic);
+      if (validation.valid) {
+        return trimmedTopic;
+      } else {
+        console.error('API返回的题目无效:', trimmedTopic, validation.error);
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('获取每日题目失败:', error);
+    return null;
+  }
+}
+
+/**
+ * 生成每日答案（降级方案）
  * 基于日期种子生成固定的数学等式
  */
-export function getDailyAnswer(): string {
+export function getDailyAnswerFallback(): string {
   const today = new Date();
   const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
   
@@ -71,6 +106,39 @@ export function getDailyAnswer(): string {
   // 使用哈希值选择等式
   const index = Math.abs(hash) % equations.length;
   return equations[index];
+}
+
+/**
+ * 获取每日答案（优先使用缓存，然后API，最后降级方案）
+ */
+export async function getDailyAnswer(): Promise<string> {
+  // 动态导入storage模块以避免循环依赖
+  const { loadDailyAnswer, saveDailyAnswer } = await import('./storage');
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  
+  // 1. 首先检查缓存
+  const cachedAnswer = loadDailyAnswer(dateStr);
+  if (cachedAnswer) {
+    return cachedAnswer;
+  }
+  
+  // 2. 缓存中没有，尝试从API获取
+  console.log('首次加载，从API获取每日题目...');
+  const apiAnswer = await getDailyAnswerFromAPI();
+  if (apiAnswer) {
+    // 保存API获取的题目到缓存
+    saveDailyAnswer(apiAnswer, dateStr, 'api');
+    console.log('✅ 成功从API获取题目并缓存');
+    return apiAnswer;
+  }
+  
+  // 3. API失败，使用降级方案
+  console.warn('⚠️ API获取失败，使用降级方案生成每日题目');
+  const fallbackAnswer = getDailyAnswerFallback();
+  // 保存降级方案的题目到缓存，确保用户刷新页面后题目一致
+  saveDailyAnswer(fallbackAnswer, dateStr, 'fallback');
+  return fallbackAnswer;
 }
 
 /**

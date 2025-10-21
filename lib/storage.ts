@@ -21,6 +21,7 @@ export interface SavedGameState {
 
 const GAME_STATE_KEY = 'nerdle-game-state';
 const STATS_KEY = 'nerdle-stats';
+const DAILY_ANSWER_KEY = 'nerdle-daily-answer';
 
 /**
  * 检查是否在浏览器环境
@@ -166,5 +167,55 @@ function getDefaultStats(): GameStats {
     guessDistribution: [0, 0, 0, 0, 0, 0],
     lastPlayedDate: '',
   };
+}
+
+/**
+ * 每日题目缓存接口
+ */
+export interface DailyAnswerCache {
+  answer: string;
+  date: string;
+  source: 'api' | 'fallback'; // 记录题目来源
+}
+
+/**
+ * 保存每日题目到缓存
+ */
+export function saveDailyAnswer(answer: string, date: string, source: 'api' | 'fallback'): void {
+  if (!isBrowser()) return;
+  
+  try {
+    const cache: DailyAnswerCache = { answer, date, source };
+    localStorage.setItem(DAILY_ANSWER_KEY, JSON.stringify(cache));
+  } catch (error) {
+    console.error('Failed to save daily answer:', error);
+  }
+}
+
+/**
+ * 从缓存加载每日题目
+ */
+export function loadDailyAnswer(currentDate: string): string | null {
+  if (!isBrowser()) return null;
+  
+  try {
+    const saved = localStorage.getItem(DAILY_ANSWER_KEY);
+    if (!saved) return null;
+    
+    const cache = JSON.parse(saved) as DailyAnswerCache;
+    
+    // 检查是否是今天的题目
+    if (cache.date === currentDate) {
+      console.log(`使用缓存的每日题目 (来源: ${cache.source === 'api' ? 'API' : '降级方案'})`);
+      return cache.answer;
+    }
+    
+    // 如果不是今天的题目，清除缓存
+    localStorage.removeItem(DAILY_ANSWER_KEY);
+    return null;
+  } catch (error) {
+    console.error('Failed to load daily answer:', error);
+    return null;
+  }
 }
 

@@ -32,6 +32,7 @@ export interface UseGameStateReturn {
   stats: GameStats;
   errorMessage: string;
   keyStates: Map<string, TileState>;
+  isLoading: boolean;
   handleKeyPress: (key: string) => void;
   handleBackspace: () => void;
   handleEnter: () => void;
@@ -49,47 +50,54 @@ export function useGameState(): UseGameStateReturn {
   const [stats, setStats] = useState<GameStats>(getStats());
   const [errorMessage, setErrorMessage] = useState('');
   const [keyStates, setKeyStates] = useState<Map<string, TileState>>(new Map());
+  const [isLoading, setIsLoading] = useState(true);
 
   // 初始化游戏
   useEffect(() => {
-    const todayAnswer = getDailyAnswer();
-    const todayDate = getTodayDateString();
-    const savedState = loadGameState();
+    const initializeGame = async () => {
+      setIsLoading(true);
+      const todayDate = getTodayDateString();
+      const savedState = loadGameState();
 
-    if (savedState && savedState.date === todayDate) {
-      // 加载今天的游戏进度
-      setGuesses(savedState.guesses);
-      setCurrentGuess(savedState.currentGuess);
-      setGameStatus(savedState.gameStatus);
-      setAnswer(savedState.answer);
-      
-      // 重建键盘状态
-      const newKeyStates = new Map<string, TileState>();
-      savedState.guesses.forEach((guess) => {
-        guess.guess.split('').forEach((char, index) => {
-          const state = guess.states[index];
-          const currentState = newKeyStates.get(char);
-          
-          // 优先级：correct > present > absent
-          if (state === 'correct') {
-            newKeyStates.set(char, 'correct');
-          } else if (state === 'present' && currentState !== 'correct') {
-            newKeyStates.set(char, 'present');
-          } else if (state === 'absent' && !currentState) {
-            newKeyStates.set(char, 'absent');
-          }
+      if (savedState && savedState.date === todayDate) {
+        // 加载今天的游戏进度
+        setGuesses(savedState.guesses);
+        setCurrentGuess(savedState.currentGuess);
+        setGameStatus(savedState.gameStatus);
+        setAnswer(savedState.answer);
+        
+        // 重建键盘状态
+        const newKeyStates = new Map<string, TileState>();
+        savedState.guesses.forEach((guess) => {
+          guess.guess.split('').forEach((char, index) => {
+            const state = guess.states[index];
+            const currentState = newKeyStates.get(char);
+            
+            // 优先级：correct > present > absent
+            if (state === 'correct') {
+              newKeyStates.set(char, 'correct');
+            } else if (state === 'present' && currentState !== 'correct') {
+              newKeyStates.set(char, 'present');
+            } else if (state === 'absent' && !currentState) {
+              newKeyStates.set(char, 'absent');
+            }
+          });
         });
-      });
-      setKeyStates(newKeyStates);
-    } else {
-      // 开始新游戏
-      setAnswer(todayAnswer);
-      setGuesses([]);
-      setCurrentGuess('');
-      setGameStatus('playing');
-      setKeyStates(new Map());
-      clearGameState();
-    }
+        setKeyStates(newKeyStates);
+      } else {
+        // 开始新游戏 - 从API获取题目
+        const todayAnswer = await getDailyAnswer();
+        setAnswer(todayAnswer);
+        setGuesses([]);
+        setCurrentGuess('');
+        setGameStatus('playing');
+        setKeyStates(new Map());
+        clearGameState();
+      }
+      setIsLoading(false);
+    };
+
+    initializeGame();
   }, []);
 
   // 保存游戏状态
@@ -108,24 +116,24 @@ export function useGameState(): UseGameStateReturn {
 
   // 处理按键输入
   const handleKeyPress = useCallback((key: string) => {
-    if (gameStatus !== 'playing') return;
+    if (isLoading || gameStatus !== 'playing') return;
     if (currentGuess.length >= EQUATION_LENGTH) return;
 
     setCurrentGuess((prev) => prev + key);
     setErrorMessage('');
-  }, [gameStatus, currentGuess.length]);
+  }, [isLoading, gameStatus, currentGuess.length]);
 
   // 处理退格
   const handleBackspace = useCallback(() => {
-    if (gameStatus !== 'playing') return;
+    if (isLoading || gameStatus !== 'playing') return;
 
     setCurrentGuess((prev) => prev.slice(0, -1));
     setErrorMessage('');
-  }, [gameStatus]);
+  }, [isLoading, gameStatus]);
 
   // 处理提交
   const handleEnter = useCallback(() => {
-    if (gameStatus !== 'playing') return;
+    if (isLoading || gameStatus !== 'playing') return;
     if (currentGuess.length !== EQUATION_LENGTH) {
       setErrorMessage('等式必须是8个字符');
       return;
@@ -178,24 +186,26 @@ export function useGameState(): UseGameStateReturn {
       const newStats = updateStats(false, newGuesses.length, getTodayDateString());
       setStats(newStats);
     }
-  }, [gameStatus, currentGuess, answer, guesses, keyStates]);
+  }, [isLoading, gameStatus, currentGuess, answer, guesses, keyStates]);
 
   // 重置游戏（主要用于开发调试）
-  const resetGame = useCallback(() => {
+  const resetGame = useCallback(async () => {
+    setIsLoading(true);
     clearGameState();
-    const todayAnswer = getDailyAnswer();
+    const todayAnswer = await getDailyAnswer();
     setAnswer(todayAnswer);
     setGuesses([]);
     setCurrentGuess('');
     setGameStatus('playing');
     setKeyStates(new Map());
     setErrorMessage('');
+    setIsLoading(false);
   }, []);
 
   // 监听物理键盘输入
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameStatus !== 'playing') return;
+      if (isLoading || gameStatus !== 'playing') return;
 
       const key = e.key;
 
@@ -210,7 +220,7 @@ export function useGameState(): UseGameStateReturn {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameStatus, handleKeyPress, handleBackspace, handleEnter]);
+  }, [isLoading, gameStatus, handleKeyPress, handleBackspace, handleEnter]);
 
   return {
     guesses,
@@ -220,6 +230,7 @@ export function useGameState(): UseGameStateReturn {
     stats,
     errorMessage,
     keyStates,
+    isLoading,
     handleKeyPress,
     handleBackspace,
     handleEnter,

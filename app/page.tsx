@@ -18,6 +18,7 @@ export default function Home() {
     stats,
     errorMessage,
     keyStates,
+    isLoading,
     handleKeyPress,
     handleBackspace,
     handleEnter,
@@ -71,42 +72,52 @@ export default function Home() {
       />
 
       <main className="flex-1 flex flex-col items-center justify-center px-2 sm:px-4 pb-4 sm:pb-8">
-        {/* 游戏面板 */}
-        <div className={`mb-4 sm:mb-8 ${shake ? 'animate-shake' : ''}`}>
-          <GameBoard
-            guesses={guesses}
-            currentGuess={currentGuess}
-            animateLastRow={animateLastRow}
-          />
-        </div>
-
-        {/* Error message */}
-        {errorMessage && (
-          <div className="mb-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
-            {errorMessage}
+        {isLoading ? (
+          /* 加载状态 */
+          <div className="flex flex-col items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mb-4"></div>
+            <p className="text-gray-400 text-sm">正在加载每日题目...</p>
           </div>
-        )}
+        ) : (
+          <>
+            {/* 游戏面板 */}
+            <div className={`mb-4 sm:mb-8 ${shake ? 'animate-shake' : ''}`}>
+              <GameBoard
+                guesses={guesses}
+                currentGuess={currentGuess}
+                animateLastRow={animateLastRow}
+              />
+            </div>
 
-        {/* Game status message */}
-        {gameStatus === 'won' && (
-          <div className="mb-4 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
-            🎉 Congratulations! You got it!
-          </div>
-        )}
-        {gameStatus === 'lost' && (
-          <div className="mb-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
-            😔 Better luck next time! The answer was: {answer}
-          </div>
-        )}
+            {/* Error message */}
+            {errorMessage && (
+              <div className="mb-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
+                {errorMessage}
+              </div>
+            )}
 
-        {/* 虚拟键盘 */}
-        <Keyboard
-          onKeyPress={handleKeyPress}
-          onBackspace={handleBackspace}
-          onEnter={handleEnter}
-          keyStates={keyStates}
-          disabled={gameStatus !== 'playing'}
-        />
+            {/* Game status message */}
+            {gameStatus === 'won' && (
+              <div className="mb-4 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
+                🎉 Congratulations! You got it!
+              </div>
+            )}
+            {gameStatus === 'lost' && (
+              <div className="mb-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium animate-fadeIn">
+                😔 Better luck next time! The answer was: {answer}
+              </div>
+            )}
+
+            {/* 虚拟键盘 */}
+            <Keyboard
+              onKeyPress={handleKeyPress}
+              onBackspace={handleBackspace}
+              onEnter={handleEnter}
+              keyStates={keyStates}
+              disabled={gameStatus !== 'playing'}
+            />
+          </>
+        )}
       </main>
 
       {/* SEO Content Section */}
