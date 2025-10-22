@@ -1,4 +1,3 @@
-// 服务器端组件 - 主页面
 import GameClient from '@/components/GameClient';
 import SEOContent from '@/components/SEOContent.server';
 import Footer from '@/components/Footer';
@@ -6,13 +5,12 @@ import { getTranslations } from '@/lib/i18n-server';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Play Nerdle Game Online - Solve Mathematical Puzzles',
-  description: 'Play Nerdle, a math-based puzzle game that challenges your numerical logic. Solve puzzles, improve your skills, and enjoy hours of fun!',
+  title: 'Juega Nerdle en Línea - Resuelve Rompecabezas Matemáticos',
+  description: 'Juega Nerdle, un juego de rompecabezas basado en matemáticas que desafía tu lógica numérica. ¡Resuelve rompecabezas, mejora tus habilidades y diviértete durante horas!',
 };
 
-export default async function Home() {
-  // 服务器端加载英文翻译
-  const translations = await getTranslations('en');
+export default async function EsPage() {
+  const translations = await getTranslations('es');
 
   return (
     <>
@@ -22,3 +20,4 @@ export default async function Home() {
     </>
   );
 }
+
