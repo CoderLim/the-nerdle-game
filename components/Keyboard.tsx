@@ -65,6 +65,14 @@ export default function Keyboard({
               widthClass = 'w-[74px] sm:w-[86px] md:w-[100px]'; // 删除键占两格
             }
             
+            // 根据按键类型设置字体大小
+            let fontClass = 'text-lg sm:text-xl md:text-2xl'; // 数字默认大小
+            if (['+', '-', '*', '/'].includes(key)) {
+              fontClass = 'text-2xl sm:text-3xl md:text-4xl'; // 运算符更大
+            } else if (key === '=') {
+              fontClass = 'text-xl sm:text-2xl md:text-3xl'; // 等号稍大
+            }
+            
             return (
               <button
                 key={key}
@@ -73,7 +81,7 @@ export default function Keyboard({
                 className={`
                   ${widthClass}
                   h-11 sm:h-12 md:h-14
-                  rounded font-bold text-base sm:text-lg
+                  rounded font-bold ${fontClass}
                   transition-colors duration-150
                   ${getKeyClasses(key)}
                   active:scale-95
