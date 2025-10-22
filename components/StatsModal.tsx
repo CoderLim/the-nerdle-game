@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { GameStats } from '@/lib/storage';
+import { useI18n } from '@/lib/i18n';
 
 interface StatsModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function StatsModal({
   gameStatus,
   answer 
 }: StatsModalProps) {
+  const { t } = useI18n();
   const winRate = stats.gamesPlayed > 0 
     ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
     : 0;
@@ -28,20 +30,20 @@ export default function StatsModal({
   const maxGuessCount = Math.max(...stats.guessDistribution);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Statistics">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('stats.title')}>
       <div className="text-gray-300 space-y-4 sm:space-y-6 text-sm sm:text-base">
         {/* Game Result */}
         {gameStatus !== 'playing' && (
           <div className="text-center p-4 bg-gray-800 rounded-lg">
             {gameStatus === 'won' ? (
               <>
-                <p className="text-2xl font-bold text-green-400 mb-2">🎉 Congratulations!</p>
-                <p className="text-sm">You guessed today&apos;s equation</p>
+                <p className="text-2xl font-bold text-green-400 mb-2">{t('stats.congratulations')}</p>
+                <p className="text-sm">{t('stats.youWon')}</p>
               </>
             ) : (
               <>
-                <p className="text-2xl font-bold text-red-400 mb-2">😔 Better Luck Next Time</p>
-                <p className="text-sm mb-2">The correct answer was:</p>
+                <p className="text-2xl font-bold text-red-400 mb-2">{t('stats.betterLuck')}</p>
+                <p className="text-sm mb-2">{t('stats.correctAnswer')}</p>
                 <p className="text-xl font-bold text-white bg-gray-900 px-4 py-2 rounded inline-block">
                   {answer}
                 </p>
@@ -54,25 +56,25 @@ export default function StatsModal({
         <div className="grid grid-cols-4 gap-4 text-center">
           <div>
             <div className="text-3xl font-bold text-white">{stats.gamesPlayed}</div>
-            <div className="text-xs text-gray-400">Played</div>
+            <div className="text-xs text-gray-400">{t('stats.played')}</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-white">{winRate}%</div>
-            <div className="text-xs text-gray-400">Win Rate</div>
+            <div className="text-xs text-gray-400">{t('stats.winRate')}</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-white">{stats.currentStreak}</div>
-            <div className="text-xs text-gray-400">Current Streak</div>
+            <div className="text-xs text-gray-400">{t('stats.currentStreak')}</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-white">{stats.maxStreak}</div>
-            <div className="text-xs text-gray-400">Max Streak</div>
+            <div className="text-xs text-gray-400">{t('stats.maxStreak')}</div>
           </div>
         </div>
 
         {/* Guess Distribution */}
         <div>
-          <h3 className="text-sm font-bold text-white mb-3">Guess Distribution</h3>
+          <h3 className="text-sm font-bold text-white mb-3">{t('stats.guessDistribution')}</h3>
           <div className="space-y-1">
             {stats.guessDistribution.map((count, index) => {
               const percentage = maxGuessCount > 0 
@@ -99,7 +101,7 @@ export default function StatsModal({
         {/* Next Game Countdown */}
         {gameStatus !== 'playing' && (
           <div className="text-center p-4 bg-gray-800 rounded-lg">
-            <p className="text-sm text-gray-400 mb-1">Next Nerdle</p>
+            <p className="text-sm text-gray-400 mb-1">{t('stats.nextNerdle')}</p>
             <p className="text-2xl font-bold text-white">
               <NextGameCountdown />
             </p>
@@ -111,7 +113,7 @@ export default function StatsModal({
           onClick={onClose}
           className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded transition-colors"
         >
-          Close
+          {t('stats.close')}
         </button>
       </div>
     </Modal>

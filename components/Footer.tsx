@@ -1,11 +1,16 @@
+'use client';
+
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 export default function Footer() {
+  const { t } = useI18n();
+  
   return (
     <footer className="text-center py-6 text-gray-500 text-sm border-t border-gray-800 bg-gray-950">
       <div className="max-w-4xl mx-auto px-4">
-        <p className="mb-2">Nerdle - Math Equation Puzzle Game © 2025</p>
-        <p className="mb-4">Daily challenge to exercise your mathematical thinking</p>
+        <p className="mb-2">{t('footer.copyright')}</p>
+        <p className="mb-4">{t('footer.description')}</p>
         
         <div className="flex items-center justify-center gap-4 text-xs flex-wrap">
           <a 
@@ -14,7 +19,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-green-400 transition-colors duration-200"
           >
-            GitHub
+            {t('footer.github')}
           </a>
           <span className="text-gray-700">|</span>
           <a 
@@ -23,21 +28,21 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-green-400 transition-colors duration-200"
           >
-            Chrome Extension
+            {t('footer.chromeExt')}
           </a>
           <span className="text-gray-700">|</span>
           <Link 
             href="/privacy" 
             className="text-gray-400 hover:text-green-400 transition-colors duration-200"
           >
-            Privacy Policy
+            {t('footer.privacy')}
           </Link>
           <span className="text-gray-700">|</span>
           <Link 
             href="/terms" 
             className="text-gray-400 hover:text-green-400 transition-colors duration-200"
           >
-            Terms of Use
+            {t('footer.terms')}
           </Link>
         </div>
       </div>
