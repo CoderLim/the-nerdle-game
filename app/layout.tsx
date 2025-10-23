@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { I18nProvider } from "@/lib/i18n";
+import { getTranslations } from "@/lib/i18n-server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,11 +36,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 服务器端加载英文翻译
+  const translations = await getTranslations('en');
+  
   return (
     <html lang="en">
       <body
@@ -51,7 +55,7 @@ export default function RootLayout({
           src="https://app.pageview.app/js/script.js"
           strategy="afterInteractive"
         />
-        <I18nProvider initialLanguage="en">
+        <I18nProvider initialLanguage="en" initialTranslations={translations}>
           {children}
         </I18nProvider>
       </body>

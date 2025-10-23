@@ -41,15 +41,17 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ 
   children,
-  initialLanguage = 'en'
+  initialLanguage = 'en',
+  initialTranslations = {}
 }: { 
   children: React.ReactNode;
   initialLanguage?: Language;
+  initialTranslations?: Record<string, string>;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [language, setLanguageState] = useState<Language>(initialLanguage);
-  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [translations, setTranslations] = useState<Record<string, string>>(initialTranslations);
 
   // 从 URL 路径检测语言
   useEffect(() => {
